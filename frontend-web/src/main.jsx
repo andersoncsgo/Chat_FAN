@@ -1,10 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from 'react'; // Importe React se remover StrictMode
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode> // Comentado
     <App />
-  </StrictMode>,
-)
+  // </StrictMode>, // Comentado
+
+  // Ou simplesmente:
+  // <App />
+);

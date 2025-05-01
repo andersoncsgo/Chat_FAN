@@ -1,75 +1,48 @@
 /* src/components/JoinScreen/JoinScreen.module.css */
-.joinContainer {
+/* ... (estilos .joinContainer, .joinForm, .title, .errorText, .input, .button como antes) ... */
+
+/* Estilos para o Seletor de Sala */
+.roomSelector {
+    width: 100%; /* Ocupa a largura do form */
+    margin-bottom: 20px; /* Espaço antes do botão */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 60px); /* Altura total menos altura do header */
-    padding-top: 60px; /* Espaço para o header fixo */
-    background-color: #f4f4f4;
-    width: 100%;
+    flex-direction: column; /* Label acima do select */
+    align-items: flex-start; /* Alinha label à esquerda */
   }
   
-  .joinForm {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    max-width: 400px;
+  .roomLabel {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    font-weight: 500;
   }
   
-  .title {
-    margin-bottom: 25px;
-    color: #333;
-    font-size: 1.5em;
-    font-weight: bold;
-  }
-  
-  .errorText {
-      color: #cc8400; /* Laranja/Amarelo para aviso */
-      font-size: 0.9em;
-      margin-bottom: 15px;
-  }
-  
-  
-  .input {
+  .select {
     padding: 12px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-input);
     border-radius: 4px;
-    margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
     font-size: 1em;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
   
-  .input:focus {
-      border-color: #000;
+  .select:disabled {
+    background-color: var(--bg-input);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .select:focus {
+      border-color: var(--border-input-focus);
       outline: none;
   }
   
-  
+  /* Ajuste no botão para refletir a nova condição */
   .button {
-    padding: 12px 25px;
-    background-color: #000000; /* Botão preto */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: bold;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-    width: 100%;
-  }
-  
-  .button:hover:not(:disabled) {
-    background-color: #333;
-  }
-  
-  .button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.7;
+    /* ... (estilos como antes) ... */
+    width: 100%; /* Garante largura total */
   }

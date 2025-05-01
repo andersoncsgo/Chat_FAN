@@ -1,0 +1,7 @@
+/* src/utils/emojiParser.module.css */
+.customEmoji {
+    height: 1.4em; /* Altura relativa ao tamanho da fonte atual */
+    width: auto;  /* Mantém proporção */
+    vertical-align: middle; /* Alinha verticalmente com o texto */
+    margin: 0 0.1em; /* Pequeno espaço lateral */
+  }

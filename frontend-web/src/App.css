@@ -1,167 +1,100 @@
-/* Estilos gerais */
+/* src/App.css - Estilos Globais, Layout e Temas */
+
+/* 1. Definir Variáveis CSS para o tema padrão (light) */
+:root {
+  --bg-primary: #ffffff;          /* Fundo principal (App, Header) */
+  --bg-secondary: #f4f4f4;        /* Fundo da página, JoinScreen */
+  --bg-tertiary: #f9f9f9;         /* Fundo da área de mensagens */
+  --bg-input: #ffffff;           /* Fundo dos inputs */
+  --bg-button: #000000;          /* Fundo botão primário (preto) */
+  --bg-button-hover: #333333;
+  --bg-button-disabled: #cccccc;
+  --bg-my-message: #000000;       /* Fundo da minha mensagem */
+  --bg-other-message: #e5e5ea;    /* Fundo msg dos outros */
+
+  --text-primary: #333333;        /* Texto principal */
+  --text-secondary: #555555;      /* Texto secundário, usernames */
+  --text-light: #ffffff;          /* Texto sobre fundos escuros (botões, minha msg) */
+  --text-accent: #e60000;         /* Cor de destaque (nomes outros usuários) */
+  --text-system: #777777;         /* Mensagens de sistema */
+  --text-placeholder: #999999;
+  --text-button-disabled: #666666;
+
+  --border-color: #e0e0e0;        /* Bordas gerais */
+  --border-input: #cccccc;
+  --border-input-focus: #888888;
+
+  --shadow-color: rgba(0, 0, 0, 0.1); /* Sombra padrão */
+  --logo-filter: none;               /* Filtro para o logo SVG */
+}
+
+/* 2. Definir Overrides das Variáveis para o tema escuro */
+body.dark-theme {
+  --bg-primary: #1f1f1f;          /* Ex: cinza bem escuro */
+  --bg-secondary: #121212;        /* Ex: quase preto */
+  --bg-tertiary: #2a2a2a;         /* Ex: cinza escuro para mensagens */
+  --bg-input: #333333;
+  --bg-button: #f0f0f0;          /* Botões claros no escuro */
+  --bg-button-hover: #d0d0d0;
+  --bg-button-disabled: #555555;
+  --bg-my-message: #007bff;       /* Ex: Azul para minhas mensagens */
+  --bg-other-message: #3a3a3c;    /* Ex: Cinza escuro para mensagens dos outros */
+
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-light: #1f1f1f;          /* Texto escuro para botões claros */
+  --text-accent: #ff6b6b;         /* Vermelho mais vivo no escuro */
+  --text-system: #999999;
+  --text-placeholder: #777777;
+  --text-button-disabled: #888888;
+
+  --border-color: #444444;
+  --border-input: #555555;
+  --border-input-focus: #aaaaaa;
+
+  --shadow-color: rgba(255, 255, 255, 0.05);
+  /* Inverte as cores do logo e ajusta matiz (pode precisar de ajuste fino) */
+  --logo-filter: invert(100%) hue-rotate(180deg);
+}
+
+/* 3. Estilos Globais usando as Variáveis */
 body {
-  font-family: sans-serif;
   margin: 0;
-  background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-secondary); /* Usa variável */
+  color: var(--text-primary);       /* Usa variável */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
   min-height: 100vh;
 }
 
 .App {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  width: 450px;
-  max-width: 500px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--bg-primary); /* Usa variável */
 }
 
-h1 {
-  background-color: #000; /* Cor preta FURIA */
-  color: #fff; /* Cor branca */
-  padding: 15px;
-  margin: 0;
-  text-align: center;
-  font-size: 1.5em;
-}
-
-/* Formulário de Join */
-.join-form {
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.join-form h2 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.join-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    width: 80%;
-}
-
-.join-form button {
-    padding: 10px 20px;
-    background-color: #e60000; /* Vermelho FURIA (aproximado) */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-.join-form button:hover {
-     background-color: #b30000;
-}
-
-
-/* Container do Chat */
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 60vh; /* Altura fixa para o container do chat */
-    min-height: 400px;
-}
-
-
-/* Área de Mensagens */
-.chat-messages {
-  flex-grow: 1; /* Ocupa o espaço disponível */
-  overflow-y: auto; /* Adiciona scroll se necessário */
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  flex-direction: column; /* Empilha as mensagens */
-}
-
-.message {
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border-radius: 15px;
-  max-width: 70%;
-  word-wrap: break-word; /* Quebra palavras longas */
-}
-
-.message .username {
-  font-weight: bold;
-  display: block; /* Nome em linha separada */
-  margin-bottom: 3px;
-  font-size: 0.8em;
-  color: #555;
-}
-
-.my-message {
-  background-color: #e60000; /* Vermelho FURIA */
-  color: white;
-  align-self: flex-end; /* Alinha à direita */
-  border-bottom-right-radius: 5px; /* Ajusta canto */
-}
-
-.my-message .username {
-    color: #eee; /* Cor mais clara para contraste */
-    text-align: right; /* Alinha o "Você" à direita */
-}
-
-
-.other-message {
-  background-color: #e0e0e0; /* Cinza claro */
-  color: #333;
-  align-self: flex-start; /* Alinha à esquerda */
-   border-bottom-left-radius: 5px; /* Ajusta canto */
-}
-
-.other-message .username {
-    color: #e60000; /* Nome do outro usuário em vermelho */
-}
-
-.system {
-    font-style: italic;
-    color: #777;
-    font-size: 0.9em;
-    text-align: center;
-    width: 100%;
-    align-self: center;
-    margin-bottom: 15px;
-    background: none;
-}
-
-/* Formulário de Envio de Mensagem */
-.message-form {
-  display: flex;
-  padding: 15px;
-  background-color: #fff;
-}
-
-.message-form input {
+.main-content {
   flex-grow: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 20px; /* Bordas arredondadas */
-  margin-right: 10px;
+  display: flex;            /* Necessário */
+  justify-content: center; /* Necessário */
+  padding-top: 60px;      /* Necessário */
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--bg-secondary);
 }
 
-.message-form button {
-  padding: 10px 15px;
-  background-color: #000; /* Botão preto */
-  color: white;
-  border: none;
-  border-radius: 20px; /* Bordas arredondadas */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.message-form button:hover {
-  background-color: #333; /* Preto mais claro no hover */
-}
+/* Remove estilos antigos e desnecessários que estavam aqui */
+/* .App h1, .join-form, etc. foram movidos para seus componentes */

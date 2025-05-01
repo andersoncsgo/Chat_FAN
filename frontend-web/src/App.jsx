@@ -1,164 +1,216 @@
 // src/App.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import io from 'socket.io-client';
-
-// Importe os novos componentes
 import Header from './components/Header/Header';
 import JoinScreen from './components/JoinScreen/JoinScreen';
 import ChatInterface from './components/ChatInterface/ChatInterface';
-
-// Importe o logo
-import furiaLogo from './assets/img/logo-furia.svg'; // Caminho atualizado
-
-// Importe os estilos globais (ajustaremos ele)
+import furiaLogo from './assets/img/logo-furia.svg';
 import './App.css';
 
-// Conecte ao IP da sua máquina onde o backend está rodando
-const SOCKET_SERVER_URL = 'http://localhost:5000'; // <-- MUDE AQUI SE NECESSÁRIO (IP local se for mobile)
+const SOCKET_SERVER_URL = 'http://localhost:5000';
 
-// Interface/Tipo para mensagem (mesmo se for JS, ajuda a entender)
-// interface ChatMessage { _id?: string; username?: string; text: string; sid?: string; type?: 'system' | 'user'; }
+// Lista de salas disponíveis
+const AVAILABLE_ROOMS = [
+  "#PartidaAoVivo", "#Memes", "#Notícias", "#DiscussõesTáticas"
+];
 
 function App() {
   const [username, setUsername] = useState('');
+  const [selectedRoom, setSelectedRoom] = useState(AVAILABLE_ROOMS[0]); // Sala padrão
+  const [currentRoom, setCurrentRoom] = useState(''); // Sala que realmente entrou
   const [isJoined, setIsJoined] = useState(false);
   const [message, setMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState([]); // Array de ChatMessage
-  const [isConnected, setIsConnected] = useState(false); // Novo estado para conexão
+  const [chatMessages, setChatMessages] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef(null);
-  const messagesEndRef = useRef(null); // Para rolar para o final
+  const messagesEndRef = useRef(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('appTheme') || 'light');
 
-  // Função para gerar ID simples (substitua por UUID em produção)
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('appTheme', newTheme);
+      return newTheme;
+    });
+  };
+
+  useEffect(() => {
+    document.body.className = `${theme}-theme`;
+  }, [theme]);
+
   const generateId = () => `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-  // Conecta ao Socket.IO e configura listeners
+  // --- LÓGICA DO SOCKET ---
   useEffect(() => {
+    if (socketRef.current) return;
+
     console.log('Tentando conectar ao servidor Socket.IO...');
-    socketRef.current = io(SOCKET_SERVER_URL, {
+    const socket = io(SOCKET_SERVER_URL, {
       transports: ['websocket'],
-      reconnectionAttempts: 5, // Tenta reconectar
+      reconnectionAttempts: 5,
+      // reconnection: true, // Garante que tente reconectar
+      // reconnectionDelay: 1000,
+      // reconnectionDelayMax: 5000,
     });
+    socketRef.current = socket;
 
-    socketRef.current.on('connect', () => {
-      console.log('Conectado com sucesso! SID:', socketRef.current.id);
+    const handleConnect = () => {
+      console.log('Conectado! SID:', socket.id);
       setIsConnected(true);
-      // Se já tinha um nome de usuário e reconectou, entra novamente
-      if (username && !isJoined) {
-         socketRef.current.emit('join', { username });
-         // Não seta isJoined aqui, espera a confirmação ou lógica de join
+      // Tenta re-entrar na sala se já estava em uma e reconectou
+      if (currentRoom && username) {
+         console.log(`Reconectado. Tentando re-entrar na sala ${currentRoom} como ${username}`);
+         socket.emit('join', { username, room: currentRoom });
+         // Limpa mensagens antigas para evitar confusão ou espera histórico
+         setChatMessages([]);
       }
-    });
+    };
 
-    socketRef.current.on('disconnect', (reason) => {
-      console.log('Desconectado:', reason);
-      setIsConnected(false);
-      setIsJoined(false); // Sai do chat ao desconectar
-       setChatMessages((prev) => [...prev, { _id: generateId(), type: 'system', text: 'Você foi desconectado.' }]);
-      // Poderia tentar reconectar manualmente ou mostrar aviso
-    });
-
-    socketRef.current.on('connect_error', (err) => {
-      console.error('Erro de conexão:', err);
-      setIsConnected(false);
-      // Mostra aviso apenas se não estava conectado antes para evitar spam
-      if (!isConnected) {
-          // Poderia mostrar um Toast/Snackbar em vez de alert
-           alert(`Não foi possível conectar ao servidor de chat: ${SOCKET_SERVER_URL}. Verifique o backend e o endereço.`);
-      }
-
-    });
-
-    // Listener para o histórico inicial (pode vir vazio se o server não guardar)
-    socketRef.current.on('message_history', (history) => {
-      console.log('Histórico recebido:', history);
-      setChatMessages(history.map(msg => ({ ...msg, _id: msg._id || generateId() }))); // Garante _id
-    });
-
-    // Listener para novas mensagens
-    socketRef.current.on('new_message', (newMessage) => {
-      console.log('Nova mensagem:', newMessage);
-      setChatMessages((prevMessages) => [
-          ...prevMessages,
-          { ...newMessage, _id: generateId(), type: 'user' } // Garante _id e type
-      ]);
-    });
-
-     // Listener para usuário entrou
-     socketRef.current.on('user_joined', (data) => {
-      console.log('Usuário entrou:', data.username);
-      // Evita adicionar mensagem se o próprio usuário entrou (opcional)
-      if (data.sid !== socketRef.current?.id) {
-           setChatMessages((prev) => [...prev, { _id: generateId(), type: 'system', text: `${data.username} entrou no chat!` }]);
-      }
-     });
-
-    // Listener para usuário saiu
-    socketRef.current.on('user_left', (data) => {
-      console.log('Usuário saiu:', data.username);
-       setChatMessages((prev) => [...prev, { _id: generateId(), type: 'system', text: `${data.username} saiu do chat.` }]);
-    });
+    const handleDisconnect = (reason) => { /* ... (igual antes) ... */
+        console.log('Desconectado:', reason);
+        setIsConnected(false);
+        setIsJoined(false);
+        setCurrentRoom(''); // Limpa sala atual ao desconectar
+        // Adiciona mensagem apenas se não for desconexão intencional (opcional)
+        if (reason !== 'io client disconnect') {
+             setChatMessages([{ _id: generateId(), type: 'system', text: 'Você foi desconectado.' }]);
+        }
+    };
+    const handleConnectError = (err) => { /* ... (igual antes) ... */
+        console.error('Erro de conexão:', err);
+        if (!isConnected) {
+            alert(`Falha ao conectar ao chat: ${SOCKET_SERVER_URL}. Verifique o servidor.`);
+        }
+        setIsConnected(false);
+        setCurrentRoom('');
+    };
+    const handleHistory = (history) => { /* ... (igual antes) ... */
+        console.log(`Histórico recebido para sala ${currentRoom}:`, history.length);
+        setChatMessages(history.map(msg => ({ ...msg, _id: msg._id || generateId() })));
+    };
+    const handleNewMessage = (newMessage) => { /* ... (igual antes) ... */
+        // Não precisa mais filtrar por sala, backend já faz isso
+        console.log('Nova mensagem na sala:', newMessage.text);
+        setChatMessages((prev) => [...prev, { ...newMessage, _id: generateId(), type: 'user' }]);
+    };
+    const handleUserJoined = (data) => { /* ... (igual antes, talvez ajustar texto) ... */
+        console.log('User joined sala:', data.username);
+        // Só mostra se não for o próprio usuário que acabou de dar join
+        if (data.sid !== socket.id) {
+             setChatMessages((prev) => [...prev, { _id: generateId(), type: 'system', text: `${data.username} entrou na sala.` }]);
+        }
+    };
+    const handleUserLeft = (data) => { /* ... (igual antes, talvez ajustar texto) ... */
+        console.log('User left sala:', data.username);
+        setChatMessages((prev) => [...prev, { _id: generateId(), type: 'system', text: `${data.username} saiu da sala.` }]);
+    };
+    const handleJoinError = (data) => { // Listener para erro de join
+        console.error("Erro ao entrar na sala:", data.message);
+        alert(`Erro ao entrar na sala: ${data.message}`);
+        setIsJoined(false); // Garante que não fique no estado "joined"
+        setCurrentRoom('');
+    };
 
 
-    // Função de limpeza ao desmontar o componente
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('connect_error', handleConnectError);
+    socket.on('message_history', handleHistory);
+    socket.on('new_message', handleNewMessage);
+    socket.on('user_joined', handleUserJoined);
+    socket.on('user_left', handleUserLeft);
+    socket.on('join_error', handleJoinError); // Adiciona listener de erro
+
     return () => {
-      if (socketRef.current?.connected) {
-        console.log('Desconectando do servidor Socket.IO...');
-        socketRef.current.disconnect();
+      console.log("Limpando listeners e desconectando...");
+       // Remove todos os listeners específicos
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('connect_error', handleConnectError);
+      socket.off('message_history', handleHistory);
+      socket.off('new_message', handleNewMessage);
+      socket.off('user_joined', handleUserJoined);
+      socket.off('user_left', handleUserLeft);
+      socket.off('join_error', handleJoinError);
+      if (socket.connected) {
+        socket.disconnect();
       }
       socketRef.current = null;
     };
-  }, [username]); // Adiciona username como dependência para tentar re-join
+  }, []); // Roda só uma vez
 
 
-  // Rola para a última mensagem
-  useEffect(() => {
+  useEffect(() => { /* ... (scroll igual antes) ... */
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMessages]); // Roda sempre que chatMessages mudar
+  }, [chatMessages]);
 
-
+  // Atualizado para enviar NOME e SALA
   const handleJoin = (e) => {
-    e.preventDefault();
-    if (username.trim() && socketRef.current && isConnected) {
-      socketRef.current.emit('join', { username: username.trim() });
-      setIsJoined(true); // Assume que entrou (idealmente esperar confirmação do server)
-       setChatMessages((prev) => [...prev, { _id: generateId(), type: 'system', text: `Você entrou como ${username.trim()}.` }]);
-    } else if (!isConnected) {
-         alert('Ainda conectando ao servidor, tente novamente em um instante.');
+    e?.preventDefault();
+    console.log('--- handleJoin Iniciado ---'); // Log 1
+    console.log('Estado atual: isConnected=', isConnected, 'username=', username, 'selectedRoom=', selectedRoom); // Log 2
+
+    if (username.trim() && selectedRoom && socketRef.current && isConnected) {
+      console.log('[handleJoin] Condições OK. Emitindo join...'); // Log 3
+      socketRef.current.emit('join', {
+          username: username.trim(),
+          room: selectedRoom
+      });
+      setChatMessages([]); // Limpa mensagens
+      console.log('[handleJoin] Definindo isJoined=true e currentRoom=', selectedRoom); // Log 4
+      setIsJoined(true);
+      setCurrentRoom(selectedRoom);
+      console.log('[handleJoin] Estados definidos.'); // Log 5
     } else {
-      alert('Por favor, insira um nome de usuário válido.');
+      console.log('[handleJoin] Condições NÃO atendidas.'); // Log 6
+      if (!isConnected) {
+         console.error("Tentativa de join falhou: Não conectado");
+         alert('Ainda conectando...');
+      } else if (!username.trim()){
+        console.error("Tentativa de join falhou: Username vazio");
+        alert('Nome de usuário inválido.');
+      } else if (!selectedRoom){
+         console.error("Tentativa de join falhou: Sala não selecionada");
+         alert('Selecione uma sala.');
+      } else {
+         console.error("Tentativa de join falhou: Socket não pronto?");
+      }
     }
+     console.log('--- handleJoin Finalizado ---'); // Log 7
   };
 
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e) => { /* ... (igual antes) ... */
     e.preventDefault();
     if (message.trim() && socketRef.current && isConnected && isJoined) {
       socketRef.current.emit('send_message', { message: message.trim() });
       setMessage('');
-    } else {
-        console.log('Não foi possível enviar. Verifique a conexão e se está no chat.');
     }
   };
 
-  // Função para determinar se a mensagem é do usuário atual
-  // Usar useCallback para otimizar, especialmente se passar para muitos filhos
-  const isMyMessage = useCallback((msg) => {
-      // Verifica se o socket existe e se o SID da mensagem bate com o SID atual
-      return socketRef.current && msg.sid && msg.sid === socketRef.current.id;
-  }, [isConnected]); // Recria a função se o estado de conexão mudar (socket.id pode mudar)
-
+  const isMyMessage = useCallback((msg) => { /* ... (igual antes) ... */
+    return socketRef.current && msg.sid && msg.sid === socketRef.current.id;
+  }, [isConnected]);
 
   return (
     <div className="App">
-      <Header logoSrc={furiaLogo} /> {/* Passa o logo importado */}
+      <Header
+        logoSrc={furiaLogo}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        currentRoom={currentRoom} // Passa a sala atual para o Header
+      />
 
-      <main className="main-content"> {/* Wrapper para o conteúdo principal */}
-        {!isJoined ? (
+      <main className="main-content">
+        {!isJoined || !currentRoom ? ( // Mostra JoinScreen se não entrou OU não tem sala definida
           <JoinScreen
             username={username}
             setUsername={setUsername}
+            selectedRoom={selectedRoom}     // Passa sala selecionada
+            setSelectedRoom={setSelectedRoom} // Passa função para atualizar sala
+            availableRooms={AVAILABLE_ROOMS} // Passa lista de salas
             handleJoin={handleJoin}
-            isConnected={isConnected} // Passa o estado de conexão
+            isConnected={isConnected}
           />
         ) : (
           <ChatInterface
@@ -168,7 +220,7 @@ function App() {
             handleSendMessage={handleSendMessage}
             isMyMessage={isMyMessage}
             messagesEndRef={messagesEndRef}
-            isConnected={isConnected} // Passa o estado de conexão
+            isConnected={isConnected}
           />
         )}
       </main>

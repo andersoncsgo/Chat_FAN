@@ -1,20 +1,22 @@
 // src/components/Header/Header.jsx
 import React from 'react';
-import styles from './Header.module.css'; // Usaremos CSS Modules
+import styles from './Header.module.css';
 
-// Recebe o caminho do logo como propriedade
-function Header({ logoSrc }) {
+// Recebe currentRoom também
+function Header({ logoSrc, theme, toggleTheme, currentRoom }) {
   return (
     <header className={styles.header}>
       <div className={styles.headerLeft}>
-        {/* Pode adicionar links ou breadcrumbs aqui depois */}
-        <span>FURIA Chat</span>
+        {/* Mostra a sala atual se estiver em uma */}
+        <span>{currentRoom ? `Sala: ${currentRoom}` : 'FURIA Chat'}</span>
       </div>
       <div className={styles.headerCenter}>
         <img src={logoSrc} alt="FURIA Logo" className={styles.logoImg} />
       </div>
       <div className={styles.headerRight}>
-        {/* Pode adicionar ícones ou status de conexão aqui depois */}
+        <button onClick={toggleTheme} className={styles.themeToggleButton} title="Alternar Tema">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
       </div>
     </header>
   );
