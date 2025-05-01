@@ -1,0 +1,167 @@
+/* Estilos gerais */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.App {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 90%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  background-color: #000; /* Cor preta FURIA */
+  color: #fff; /* Cor branca */
+  padding: 15px;
+  margin: 0;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+/* Formulário de Join */
+.join-form {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.join-form h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.join-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    width: 80%;
+}
+
+.join-form button {
+    padding: 10px 20px;
+    background-color: #e60000; /* Vermelho FURIA (aproximado) */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.join-form button:hover {
+     background-color: #b30000;
+}
+
+
+/* Container do Chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 60vh; /* Altura fixa para o container do chat */
+    min-height: 400px;
+}
+
+
+/* Área de Mensagens */
+.chat-messages {
+  flex-grow: 1; /* Ocupa o espaço disponível */
+  overflow-y: auto; /* Adiciona scroll se necessário */
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column; /* Empilha as mensagens */
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 15px;
+  max-width: 70%;
+  word-wrap: break-word; /* Quebra palavras longas */
+}
+
+.message .username {
+  font-weight: bold;
+  display: block; /* Nome em linha separada */
+  margin-bottom: 3px;
+  font-size: 0.8em;
+  color: #555;
+}
+
+.my-message {
+  background-color: #e60000; /* Vermelho FURIA */
+  color: white;
+  align-self: flex-end; /* Alinha à direita */
+  border-bottom-right-radius: 5px; /* Ajusta canto */
+}
+
+.my-message .username {
+    color: #eee; /* Cor mais clara para contraste */
+    text-align: right; /* Alinha o "Você" à direita */
+}
+
+
+.other-message {
+  background-color: #e0e0e0; /* Cinza claro */
+  color: #333;
+  align-self: flex-start; /* Alinha à esquerda */
+   border-bottom-left-radius: 5px; /* Ajusta canto */
+}
+
+.other-message .username {
+    color: #e60000; /* Nome do outro usuário em vermelho */
+}
+
+.system {
+    font-style: italic;
+    color: #777;
+    font-size: 0.9em;
+    text-align: center;
+    width: 100%;
+    align-self: center;
+    margin-bottom: 15px;
+    background: none;
+}
+
+/* Formulário de Envio de Mensagem */
+.message-form {
+  display: flex;
+  padding: 15px;
+  background-color: #fff;
+}
+
+.message-form input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Bordas arredondadas */
+  margin-right: 10px;
+}
+
+.message-form button {
+  padding: 10px 15px;
+  background-color: #000; /* Botão preto */
+  color: white;
+  border: none;
+  border-radius: 20px; /* Bordas arredondadas */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.message-form button:hover {
+  background-color: #333; /* Preto mais claro no hover */
+}
