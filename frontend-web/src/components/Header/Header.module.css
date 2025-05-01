@@ -1,0 +1,47 @@
+/* src/components/Header/Header.module.css */
+.header {
+    display: flex;
+    justify-content: space-between; /* Espaça os itens */
+    align-items: center; /* Alinha verticalmente */
+    padding: 10px 40px; /* Espaçamento interno (vertical, horizontal) */
+    background-color: #ffffff; /* Fundo branco */
+    border-bottom: 1px solid #e0e0e0; /* Linha divisória sutil */
+    width: 100%;
+    box-sizing: border-box; /* Garante que padding não aumente a largura total */
+    position: fixed; /* Fixa o header no topo */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Garante que fique acima de outros conteúdos */
+    height: 60px; /* Altura fixa para o header */
+  }
+  
+  .headerLeft,
+  .headerRight {
+    flex: 1; /* Ocupa espaço igual */
+    display: flex;
+    align-items: center;
+  }
+  
+  .headerLeft span {
+      font-weight: bold;
+      color: #333;
+      text-transform: uppercase;
+      font-size: 0.9em;
+  }
+  
+  
+  .headerCenter {
+    flex: 0 1 auto; /* Não cresce, não encolhe, baseia no conteúdo */
+    display: flex;
+    justify-content: center;
+  }
+  
+  .logoImg {
+    height: 35px; /* Ajuste a altura do logo conforme necessário */
+    width: auto; /* Mantém a proporção */
+  }
+  
+  .headerRight {
+    justify-content: flex-end; /* Alinha conteúdo à direita */
+    /* Estilos para ícones podem ser adicionados aqui */
+  }
