@@ -14,7 +14,7 @@ function JoinScreen({
   return (
     <div className={styles.joinContainer}>
       <form onSubmit={handleJoin} className={styles.joinForm}>
-        <h2 className={styles.title}>Entrar no Chat FURIA</h2>
+        <h2 className={styles.title}>Entrar no Chat FURIA🐾</h2>
         {!isConnected && <p className={styles.errorText}>⚠️ Conectando ao servidor...</p>}
 
         {/* Input Username */}

@@ -6,7 +6,6 @@
   height: calc(100vh - 60px); /* Altura correta abaixo do header */
   width: 1000px;     /* Opcional: Pode remover se max-width for suficiente */
   max-width: 550px; /* <-- TENTE UM VALOR MENOR */
-  margin-left: auto;
   margin-right: auto;      /* ESSENCIAL para centralizar */
   margin-left: 680px;
   /* padding-top: 60px; */  /* REMOVIDO - O pai (.main-content) já tem */
