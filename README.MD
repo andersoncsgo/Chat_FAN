@@ -13,15 +13,6 @@ A aplicação consiste em um sistema de chat web em tempo real onde os fãs pode
 
 ---
 
-## 🎥 Vídeo de Demonstração (Obrigatório)
-
-Assista a um vídeo de ~3 minutos demonstrando a interação do fã com o chat web, incluindo a troca de salas e o uso de emojis:
-
-**[➡️ Link para o Vídeo de Demonstração Aqui ⬅️]**
-*(Substitua este texto pelo link real do seu vídeo no YouTube, Loom, Google Drive, etc.)*
-
----
-
 ## ✨ Funcionalidades Implementadas
 
 *   **Conexão em Tempo Real:** Utiliza WebSockets (via Socket.IO) para comunicação instantânea.
