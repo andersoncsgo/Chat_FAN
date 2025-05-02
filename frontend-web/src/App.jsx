@@ -7,7 +7,7 @@ import ChatInterface from './components/ChatInterface/ChatInterface';
 import furiaLogo from './assets/img/logo-furia.svg';
 import './App.css';
 
-const SOCKET_SERVER_URL = 'http://localhost:5000';
+const SOCKET_SERVER_URL = 'https://chat-fan.onrender.com';
 
 // Lista de salas disponíveis
 const AVAILABLE_ROOMS = [
