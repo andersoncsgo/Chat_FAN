@@ -175,7 +175,6 @@ O backend desta aplicação está hospedado na plataforma Render e pode ser aces
 *   Canais privados ou mensagens diretas.
 *   Melhorias na UI/UX e acessibilidade.
 *   Testes unitários e de integração.
-*   Deploy do frontend web (ex: Vercel, Netlify, Render Static Site).
 
 ---
 
@@ -183,7 +182,7 @@ O backend desta aplicação está hospedado na plataforma Render e pode ser aces
 
 *   **Anderson Lucas Ribeiro de Andrade Lucena**
 *   **GitHub:** (https://github.com/andersoncsgo)
-*   **LinkedIn:** (https://www.linkedin.com/in/anderson-lucas-lucena/)
+*   **LinkedIn:** (https://www.linkedin.com/in/anderson-lucas-lucena/
 *   **Email:** anderson.lucas.ribeiro101@gmail.com
 
 ---
