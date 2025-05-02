@@ -182,8 +182,8 @@ O backend desta aplicação está hospedado na plataforma Render e pode ser aces
 ## 👤 Autor
 
 *   **Anderson Lucas Ribeiro de Andrade Lucena**
-*   **GitHub:** [\[Link para o seu perfil no GitHub\]](https://github.com/andersoncsgo)
-*   **LinkedIn:** [\[Link para o seu perfil no LinkedIn (Opcional)\]](https://www.linkedin.com/in/anderson-lucas-lucena/)
+*   **GitHub:** (https://github.com/andersoncsgo)
+*   **LinkedIn:** (https://www.linkedin.com/in/anderson-lucas-lucena/)
 *   **Email:** anderson.lucas.ribeiro101@gmail.com
 
 ---
